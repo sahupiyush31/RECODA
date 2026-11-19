@@ -15,7 +15,7 @@
   <i>Engineered for enterprise data pipelines, analytical databases, and machine learning integrity.</i>
 </p>
 
-[Key Features](#-key-features) • [Architecture](#-system-architecture) • [Quick Start](#-quick-start) • [Reconciliation Workflow](#-human-in-the-loop-reconciliation) • [API Documentation](#-api-endpoints) • [Testing](#-automated-testing)
+[Key Features](#-key-features) • [Architecture](#-system-architecture) • [Deploy to Render](#-deploy-to-render) • [Quick Start](#-quick-start) • [Reconciliation Workflow](#-human-in-the-loop-reconciliation) • [API Documentation](#-api-endpoints) • [Testing](#-automated-testing)
 
 </div>
 
@@ -170,6 +170,38 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 
 Open your browser at:
 👉 **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
+
+---
+
+## ☁️ Deploy to Render
+
+RECODA is fully configured for zero-configuration continuous deployment on [Render](https://render.com).
+
+### Option 1: 1-Click Blueprint Deployment (Recommended)
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sahupiyush31/RECODA)
+
+1. Click the **Deploy to Render** button above (or open [render.com/deploy](https://render.com/deploy?repo=https://github.com/sahupiyush31/RECODA)).
+2. Sign in with GitHub and select your repository: `sahupiyush31/RECODA`.
+3. Render automatically reads `render.yaml` and configures the web service, build commands, and health checks.
+4. *(Optional)* In **Environment Variables**, add `GEMINI_API_KEY` to enable AI diagnostics.
+5. Click **Apply**. Your app will build and go live at `https://recoda-xxxx.onrender.com`.
+
+### Option 2: Manual Web Service Setup
+
+If setting up manually in the Render Dashboard:
+1. Click **New +** > **Web Service**.
+2. Connect your GitHub repository: `https://github.com/sahupiyush31/RECODA`.
+3. Configure the following parameters:
+   - **Name:** `recoda`
+   - **Runtime:** `Python 3`
+   - **Build Command:** `pip install -r DataFix/backend/requirements.txt`
+   - **Start Command:** `cd DataFix/backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+   - **Health Check Path:** `/api/health`
+4. Under **Advanced / Environment Variables**:
+   - `PYTHON_VERSION`: `3.11.9`
+   - `GEMINI_API_KEY`: *(Your key — kept secret on Render, never in code)*
+5. Click **Create Web Service**.
 
 ---
 
