@@ -206,6 +206,34 @@ def log_audit(dataset_id: str, serial: str, col: str, old_val: Any, new_val: Any
     conn.commit()
     conn.close()
 
+def log_audit_batch(audit_records: List[Dict[str, Any]]):
+    """Inserts multiple audit log entries within a single database transaction for maximum performance."""
+    if not audit_records:
+        return
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    params = [
+        (
+            r["dataset_id"],
+            r["serial"],
+            r["col"],
+            str(r["old_val"]) if r.get("old_val") is not None else "",
+            str(r["new_val"]) if r.get("new_val") is not None else "",
+            r["actor"],
+            r["reason"],
+            r.get("timestamp", now_str),
+            r.get("val_result", "passed")
+        )
+        for r in audit_records
+    ]
+    cursor.executemany("""
+    INSERT INTO audit_logs (dataset_id, datafix_serial, column_name, old_value, new_value, actor, reason, timestamp, validation_result)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, params)
+    conn.commit()
+    conn.close()
+
 def get_audit_trail(dataset_id: str) -> List[Dict[str, Any]]:
     conn = get_db_connection()
     cursor = conn.cursor()

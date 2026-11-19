@@ -1,8 +1,14 @@
 // API Client for DataFix Engine
 
-const API_BASE = window.location.origin.includes(":8000") 
-  ? `${window.location.origin}/api` 
-  : "http://127.0.0.1:8000/api";
+// Automatically detect the correct API Base URL:
+// - When deployed (e.g. Render https://*.onrender.com) or served directly via FastAPI, use current origin.
+// - When opened via local frontend dev servers (e.g. Live Server on port 5500, 3000, 5173) or file://, point to local backend port 8000.
+const isLocalDevPort = window.location.protocol === "file:" || 
+  ["5500", "3000", "5173"].includes(window.location.port);
+
+const API_BASE = isLocalDevPort 
+  ? "http://127.0.0.1:8000/api" 
+  : `${window.location.origin}/api`;
 
 const API = {
   async checkHealth() {
@@ -61,15 +67,29 @@ const API = {
   async addFixDataset(datasetId, file) {
     const formData = new FormData();
     formData.append("file", file);
-    const res = await fetch(`${API_BASE}/datasets/${datasetId}/add-fix`, {
-      method: "POST",
-      body: formData,
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: "Reconciliation failed" }));
-      throw new Error(err.detail || "Reconciliation failed");
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s safeguard timeout
+
+    try {
+      const res = await fetch(`${API_BASE}/datasets/${datasetId}/add-fix`, {
+        method: "POST",
+        body: formData,
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ detail: "Reconciliation failed" }));
+        throw new Error(err.detail || "Reconciliation failed");
+      }
+      return await res.json();
+    } catch (e) {
+      clearTimeout(timeoutId);
+      if (e.name === "AbortError") {
+        throw new Error("Reconciliation timed out after 90 seconds. Please check server status.");
+      }
+      throw e;
     }
-    return await res.json();
   },
 
   async getAuditHistory(datasetId) {

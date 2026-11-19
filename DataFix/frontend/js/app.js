@@ -779,12 +779,15 @@ function setupAddFix() {
       return;
     }
 
+    el.submitAddFixBtn.disabled = true;
+    el.submitAddFixBtn.classList.add("opacity-50", "cursor-not-allowed");
+
     try {
       el.addFixStatus.classList.remove("hidden");
       el.addFixStatus.innerHTML = `
         <div class="text-blue-400 text-sm font-semibold flex items-center gap-2">
           <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
-          Reconciling corrected records via DataFix serials & revalidating...
+          Reconciling corrected records & revalidating dataset...
         </div>
       `;
 
@@ -804,15 +807,19 @@ function setupAddFix() {
       // Wait 1.5 seconds, then close modal and return user to Main Dashboard
       setTimeout(async () => {
         el.addFixModal.classList.add("hidden");
+        el.submitAddFixBtn.disabled = false;
+        el.submitAddFixBtn.classList.remove("opacity-50", "cursor-not-allowed");
         await refreshDashboard();
         showView("main");
       }, 1500);
 
     } catch (err) {
+      el.submitAddFixBtn.disabled = false;
+      el.submitAddFixBtn.classList.remove("opacity-50", "cursor-not-allowed");
       el.addFixStatus.innerHTML = `
         <div class="p-3 bg-rose-500/10 border border-rose-500/30 rounded-lg text-sm text-rose-300">
           <div class="font-bold">Reconciliation Safeguard Error</div>
-          <div class="mt-1 text-xs">${err.message}</div>
+          <div class="mt-1 text-xs leading-relaxed">${err.message}</div>
         </div>
       `;
     }

@@ -4,7 +4,7 @@ import numpy as np
 from typing import Dict, Any, List, Tuple
 from app.models.db import (
     get_dataset, get_records_metadata, save_record_metadata_batch,
-    log_audit, log_activity, update_dataset_stats
+    log_audit, log_audit_batch, log_activity, update_dataset_stats
 )
 from app.services.detectors import detect_row_issues, find_dataset_duplicates, calculate_outlier_bounds
 from app.services.repairs import apply_safe_repairs
@@ -88,6 +88,7 @@ def reconcile_fixed_dataset(dataset_id: str, uploaded_file_path: str) -> Dict[st
     accepted_changes = 0
     rejected_changes = 0
     reconciled_serials = []
+    audit_batch = []
 
     # Map rows to working dataset
     for row_idx, up_row in uploaded_df.iterrows():
@@ -104,10 +105,13 @@ def reconcile_fixed_dataset(dataset_id: str, uploaded_file_path: str) -> Dict[st
         elif id_col:
             raw_id = up_row[id_col]
             id_val = str(raw_id).strip() if not pd.isna(raw_id) else None
-            if not id_val or id_val not in id_to_index:
-                continue
-            target_idx = id_to_index[id_val]
-            serial = meta_by_index[target_idx]["datafix_serial"]
+            if id_val and id_val in id_to_index:
+                target_idx = id_to_index[id_val]
+                serial = meta_by_index[target_idx]["datafix_serial"]
+            elif len(uploaded_df) == len(working_df) and row_idx in meta_by_index:
+                # Fallback to positional alignment if specific row ID was missing or modified
+                target_idx = row_idx
+                serial = meta_by_index[target_idx]["datafix_serial"]
         else:
             # Full dataset aligned by row index
             if row_idx in meta_by_index:
@@ -132,31 +136,35 @@ def reconcile_fixed_dataset(dataset_id: str, uploaded_file_path: str) -> Dict[st
                 if old_str != new_str:
                     # Validate correction: does not accept introducing blank to required field
                     if new_str == "":
-                        log_audit(
-                            dataset_id=dataset_id,
-                            serial=serial,
-                            col=col,
-                            old_val=old_str,
-                            new_val=new_str,
-                            actor="Human",
-                            reason="Rejected: Cannot replace value with empty/blank",
-                            val_result="rejected"
-                        )
+                        audit_batch.append({
+                            "dataset_id": dataset_id,
+                            "serial": serial,
+                            "col": col,
+                            "old_val": old_str,
+                            "new_val": new_str,
+                            "actor": "Human",
+                            "reason": "Rejected: Cannot replace value with empty/blank",
+                            "val_result": "rejected"
+                        })
                         rejected_changes += 1
                     else:
                         working_df.at[idx, col] = new_str
                         accepted_changes += 1
                         reconciled_serials.append(serial)
-                        log_audit(
-                            dataset_id=dataset_id,
-                            serial=serial,
-                            col=col,
-                            old_val=old_str,
-                            new_val=new_str,
-                            actor="Human",
-                            reason="Human correction applied via Add Fixed Dataset",
-                            val_result="passed"
-                        )
+                        audit_batch.append({
+                            "dataset_id": dataset_id,
+                            "serial": serial,
+                            "col": col,
+                            "old_val": old_str,
+                            "new_val": new_str,
+                            "actor": "Human",
+                            "reason": "Human correction applied via Add Fixed Dataset",
+                            "val_result": "passed"
+                        })
+
+    # Batch insert all audit records in one transaction for speed
+    if audit_batch:
+        log_audit_batch(audit_batch)
 
     # Save updated working dataset
     if working_file_path.endswith(".csv"):
