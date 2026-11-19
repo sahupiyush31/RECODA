@@ -111,5 +111,13 @@ class TestAllEndpoints(unittest.TestCase):
         rb_res = rollback_change(ds_id, audit_id=latest_audit["id"])
         self.assertIn("Successfully rolled back", rb_res["message"])
 
+        # 10. Test Fallback Reconciliation without DataFix_Serial (using Employee_ID)
+        no_serial_df = template_df.drop(columns=["DataFix_Serial"])
+        no_serial_df.loc[no_serial_df["Employee_ID"] == "EMP-1005", "Salary"] = "80000"
+        no_serial_file = os.path.join(test_dir, f"{ds_id}_no_serial_correction.csv")
+        no_serial_df.to_csv(no_serial_file, index=False)
+        recon_no_serial = reconcile_fixed_dataset(ds_id, no_serial_file)
+        self.assertTrue(recon_no_serial["accepted_changes"] >= 1)
+
 if __name__ == "__main__":
     unittest.main()
