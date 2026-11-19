@@ -136,7 +136,7 @@ RECODA/
 
 Clone the repository and enter the backend directory:
 ```bash
-git clone https://github.com/sahu009/RECODA.git
+git clone https://github.com/sahupiyush31/RECODA.git
 cd RECODA/DataFix/backend
 ```
 
@@ -239,7 +239,7 @@ python -m unittest discover tests -v
 ## 👥 Hackathon & Development Credits
 
 - **Project:** RECODA (Autonomous Data Quality & Repair Engine)
-- **Author:** [Piyush Sahu](https://github.com/sahu009)
+- **Author:** [Piyush Sahu](https://github.com/sahupiyush31)
 - **Club / Initiative:** INNOVEDGE Innovation & Entrepreneurship Development Club
 - **License:** MIT License
 
