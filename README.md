@@ -212,15 +212,15 @@ When records have critical missing values or conflicting anomalies:
 1. **Review in Dashboard:** Switch to the **"Action Required (RED)"** tab to filter and inspect issues by error type.
 2. **Download Correction Template:** Click **"Download Correction Template"** to get a pre-formatted Excel/CSV with:
    - All unresolved RED records.
-   - An immutable tracking column: `_datafix_id` (`DFX-XXXXXX`).
-   - Highlighted error notes indicating exactly what needs human correction.
-3. **Edit Offline:** Team members can modify values directly in Microsoft Excel, Google Sheets, or LibreOffice.
-4. **Upload Corrections:** Click **"Upload Corrected File"**. RECODA:
+   - An immutable tracking column: `DataFix_Serial` (`DFX-XXXXXX`).
+3. **Edit Offline:** Team members modify values directly in Microsoft Excel, Google Sheets, or LibreOffice.
+4. **Upload Corrections:** Click **"Add Fixed Dataset"** (or upload corrected file):
+   - **Dual-Matching Engine:** Matches records via `DataFix_Serial` or falls back to natural primary keys (`Employee_ID`, `ID`, etc.) or full dataset row alignment.
    - Validates column headers against the original dataset.
    - Re-checks corrected rows to verify that errors are genuinely resolved.
    - Atomically merges validated corrections into the main working dataset.
    - Automatically transitions resolved rows from **RED** to **GREEN**.
-   - Records the human author, timestamp, and audit diff.
+   - Records the human author, timestamp, and audit diff with rollback support.
 
 ---
 

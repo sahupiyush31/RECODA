@@ -3,7 +3,7 @@ services:
     name: recoda
     runtime: python
     plan: free
-    region: oregon
+    region: singapore
     branch: main
     buildCommand: "pip install -r DataFix/backend/requirements.txt"
     startCommand: "cd DataFix/backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
