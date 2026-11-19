@@ -1,0 +1,13 @@
+Employee_ID,Name,Department,Salary,Join_Date,Age,Email
+EMP-1001,Alice Walker,Engineering,85000.0,2021-04-15,29,alice.w@company.com
+EMP-1002,  Bob  Smith  ,Marketing,62000.0,12/05/2020,34,bob.smith@company.com
+EMP-1003,Charlie Davis,Finance,91000.0,2019/11/01,41,charlie.d@company.com
+EMP-1004,Diana Prince ,Engineering,105000.0,2018-08-20,32,diana.p@company.com
+EMP-1005,Evan Wright,Sales,,2022-01-10,28,evan.w@company.com
+,Fiona Gallagher,HR,54000.0,2023-03-01,26,fiona.g@company.com
+EMP-1007,George Clark,Operations,-45000.0,2020-09-14,38,george.c@company.com
+EMP-1008,Hannah Abbott,Finance,78000.0,2022-02-31,30,hannah.a@company.com
+EMP-1009,Ian Malcolm,Research,95000.0,2017-06-12,-5,ian.m@company.com
+EMP-1010,Julia Roberts,Legal,115000.0,2016-10-05,45,julia.roberts-company
+EMP-1011,Kevin Bacon,Marketing,60000.0,2021-07-22,33,kevin.b@company.com
+EMP-1011,Kevin Bacon,Marketing,60000.0,2021-07-22,33,kevin.b@company.com

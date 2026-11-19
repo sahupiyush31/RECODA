@@ -1,0 +1,283 @@
+/* DataFix Custom Styles */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #000;
+  color: #fafafa;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Glassmorphism effects */
+.glass-card {
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-hover:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+/* 3D Canvas Container */
+#chart-canvas-container {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  cursor: grab;
+}
+
+#chart-canvas-container:active {
+  cursor: grabbing;
+}
+
+/* Centre Overlay in 3D Doughnut Chart */
+.chart-center-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  text-align: center;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+/* Problem cell highlight */
+.cell-problem {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border: 1px dashed rgba(255, 255, 255, 0.6) !important;
+  color: #ffffff !important;
+  position: relative;
+}
+
+.cell-problem::after {
+  content: "⚠";
+  position: absolute;
+  right: 4px;
+  top: 2px;
+  font-size: 10px;
+  color: #ffffff;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(20, 20, 20, 0.8);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(160, 160, 160, 0.35);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(220, 220, 220, 0.6);
+}
+
+/* Pulse animation */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.8; filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.3)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5)); }
+}
+
+.green-glow {
+  animation: glow-pulse 3s infinite ease-in-out;
+}
+
+
+/* Chromatic aberration / RGB-split visual system */
+:root {
+  --rgb-cyan: rgba(255, 255, 255, .6);
+  --rgb-magenta: rgba(160, 160, 160, .5);
+}
+body {
+  background-color: #000;
+  background-image: linear-gradient(135deg, #000 0%, #0a0a0a 52%, #000 100%);
+  position: relative;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: .12;
+  background: repeating-linear-gradient(
+    to bottom, transparent 0, transparent 3px,
+    rgba(255,255,255,.08) 4px
+  );
+  mix-blend-mode: screen;
+}
+.glass-card {
+  background: linear-gradient(135deg, rgba(20, 20, 20, .9), rgba(5, 5, 5, .85));
+  border: 1px solid rgba(255, 255, 255, .14);
+  box-shadow: -2px 0 0 rgba(255, 255, 255, .06), 2px 0 0 rgba(255, 255, 255, .04),
+              0 18px 55px rgba(0,0,0,.24);
+}
+.glass-card-hover:hover {
+  border-color: rgba(255, 255, 255, .4);
+  box-shadow: -3px 0 0 rgba(255,255,255,.14), 3px 0 0 rgba(255,255,255,.10),
+              0 18px 42px rgba(0,0,0,.42);
+}
+h1, h2, h3, .font-mono {
+  text-shadow: none;
+}
+button, a, input, .glass-card, .cell-problem {
+  transition-timing-function: cubic-bezier(.2,.8,.2,1);
+}
+button:hover {
+  filter: drop-shadow(0 0 1px rgba(255,255,255,.35));
+}
+#chart-canvas-container {
+  height: 360px;
+  max-width: 520px;
+  cursor: default;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+}
+.donut-svg {
+  display: block;
+  width: min(100%, 460px);
+  height: 100%;
+  overflow: visible;
+}
+.donut-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, .12);
+  stroke-width: 54;
+}
+.donut-slice {
+  cursor: pointer;
+  stroke: rgba(0, 0, 0, .92);
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform .22s cubic-bezier(.2,.8,.2,1), filter .22s ease;
+  outline: none;
+}
+.donut-slice.green {
+  fill: #10d69a;
+  filter: none;
+}
+.donut-slice.red {
+  fill: #fb477c;
+  filter: none;
+}
+.donut-slice.is-hovered {
+  transform: translate(var(--lift-x, 0), var(--lift-y, 0)) scale(1.025);
+  filter: brightness(1.16) drop-shadow(0 9px 12px rgba(0,0,0,.36));
+}
+.donut-slice:focus-visible {
+  stroke: white;
+  stroke-width: 3;
+}
+.chart-center-overlay {
+  width: 150px;
+  min-height: 90px;
+  display: grid;
+  place-items: center;
+}
+.chart-hover-info {
+  text-align: center;
+  animation: chart-pop .18s ease-out;
+}
+.chart-hover-info span {
+  display: block;
+  font: 700 10px var(--font-mono);
+  letter-spacing: .14em;
+}
+.chart-hover-info strong {
+  display: block;
+  color: #f8fafc;
+  font: 800 30px var(--font-mono);
+  text-shadow: none;
+}
+.chart-hover-info small {
+  display: block;
+  margin-top: 3px;
+  color: #a3a3a3;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+@keyframes chart-pop {
+  from { opacity: 0; transform: translateY(5px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ---- Folder-style dropdowns (RED explorer + Recent Activity rules) ---- */
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary .chev { transition: transform .15s ease; flex-shrink: 0; }
+details[open] > summary .chev { transform: rotate(90deg); }
+
+/* ---- Floating glass stat card on the donut (top-right, like the reference UI) ---- */
+.chart-center-overlay {
+  top: 8px;
+  right: 8px;
+  left: auto;
+  transform: none;
+  width: auto;
+  min-height: 0;
+  display: block;
+}
+.float-stat {
+  min-width: 190px;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.24);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  box-shadow: 0 12px 32px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.22);
+  color: #fff;
+  animation: chart-pop .18s ease-out;
+}
+.float-stat-label {
+  font: 700 10px var(--font-mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #d4d4d4;
+}
+.float-stat-value {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-top: 4px;
+  color: #fff;
+}
+.float-stat-sub {
+  font-size: 11px;
+  margin-top: 3px;
+  color: #a3a3a3;
+}
+/* Action Required! = solid white card, so the two states are easy to tell apart */
+.float-stat.is-action {
+  background: #fff;
+  border-color: #fff;
+  box-shadow: 0 12px 32px rgba(0,0,0,.55);
+}
+.float-stat.is-action .float-stat-label,
+.float-stat.is-action .float-stat-value,
+.float-stat.is-action .float-stat-sub { color: #000; }

@@ -1,0 +1,7 @@
+# ==============================================================================
+# RECODA - Gemini API Key Configuration
+# ==============================================================================
+# 1. Copy this file to 'api_key.txt' (which is git-ignored for security).
+# 2. Paste your Google Gemini API key on the next line or set GEMINI_API_KEY env var:
+#
+# YOUR_GEMINI_API_KEY_HERE

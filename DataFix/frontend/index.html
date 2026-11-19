@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RECODA — Autonomous Data Quality & Repair Engine</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Black & white theme: every coloured Tailwind class used by the app resolves to this greyscale.
+    const BW = { 50:'#fafafa',100:'#f5f5f5',200:'#e5e5e5',300:'#d4d4d4',400:'#a3a3a3',500:'#737373',600:'#525252',700:'#404040',800:'#262626',900:'#171717',950:'#0a0a0a' };
+    tailwind.config = { theme: { extend: { colors: { slate: BW, emerald: BW, rose: BW, blue: BW, purple: BW, amber: BW, indigo: BW, teal: BW, orange: BW } } } };
+  </script>
+  
+  <!-- Three.js via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="min-h-screen bg-black text-slate-100 flex flex-col selection:bg-blue-500 selection:text-white">
+
+  <!-- Header & Navigation (Section 3.1) -->
+  <header class="border-b border-slate-800/80 bg-black/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-lg tracking-tight text-white font-mono">RECODA</span>
+          </div>
+          <p class="text-xs text-slate-400 italic -mt-0.5">Autonomous Data Quality & Repair Engine</p>
+        </div>
+      </div>
+
+      <nav class="flex items-center gap-4">
+        <button data-nav="home" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          Home
+        </button>
+        <button id="nav-audit-btn" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Repair History
+        </button>
+        <button id="nav-green-btn" class="hidden px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-600 transition">
+          Correct Data
+        </button>
+        <button id="nav-red-btn" class="hidden px-3 py-1.5 rounded-lg text-sm font-extrabold bg-white text-black hover:bg-neutral-200 border border-white transition">
+          Action Required!
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main View (Dashboard - Page 1) -->
+  <main id="view-main" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- Upload Area - Primary Action (Section 3.2) -->
+    <section class="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800 relative overflow-hidden shadow-2xl">
+      <div class="absolute -right-20 -top-20 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <div class="max-w-3xl mx-auto text-center space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+          <span>Primary Action</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          UPLOAD YOUR DATASET
+        </h2>
+        <p class="text-sm text-slate-400 max-w-xl mx-auto">
+          Drag and drop your file or choose Browse. RECODA profiles, safely repairs unambiguous issues, and sorts records into <strong>Correct Data</strong> / <strong>Action Required!</strong>.
+        </p>
+
+        <!-- Dropzone -->
+        <div id="drop-zone" class="mt-6 border-2 border-dashed border-slate-700 hover:border-blue-500 bg-slate-900/40 hover:bg-blue-500/5 rounded-2xl p-8 cursor-pointer transition-all duration-200 group">
+          <input type="file" id="file-input" class="hidden" accept=".csv, .xlsx, .xls">
+          <div class="flex flex-col items-center justify-center space-y-3">
+            <div class="w-14 h-14 rounded-2xl bg-slate-800 group-hover:bg-blue-600/20 flex items-center justify-center text-slate-400 group-hover:text-blue-400 transition">
+              <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+            </div>
+            <div>
+              <span class="text-sm font-semibold text-slate-200 group-hover:text-blue-400">Click to Browse Files</span>
+              <span class="text-xs text-slate-500 block mt-0.5">or drag and drop here</span>
+            </div>
+            <div class="text-[11px] text-slate-500 font-mono">
+              Supported Formats: .csv, .xlsx, .xls
+            </div>
+          </div>
+        </div>
+
+        <!-- Sample Dataset Quick Action -->
+        <div class="pt-2 flex items-center justify-center gap-3">
+          <span class="text-xs text-slate-500">Need a test dataset?</span>
+          <button id="load-sample-btn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">
+            <svg class="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            Load Sample Messy Dataset (Employees)
+          </button>
+        </div>
+
+        <!-- Upload & Analysis Progress -->
+        <div id="upload-progress" class="hidden mt-4 p-4 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm flex items-center justify-center gap-3 animate-pulse">
+          <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
+          <span id="upload-status-text" class="font-medium">Uploading and profiling dataset...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Empty State (Section 3.3) -->
+    <section id="empty-state" class="glass-card rounded-2xl p-12 text-center border border-slate-800/80">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-800/60 flex items-center justify-center text-slate-500">
+        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-bold text-slate-200">Your data journey starts here.</h3>
+      <p class="text-sm text-slate-400 max-w-md mx-auto mt-2">
+        Upload a CSV or Excel dataset to begin automated data-quality analysis.
+      </p>
+    </section>
+
+    <!-- Analysis Container (Hidden until dataset is uploaded) -->
+    <div id="analysis-container" class="hidden space-y-8">
+
+      <!-- Action Required! Banner (solid white = needs your attention) -->
+      <div id="btn-inspect-red" class="cursor-pointer group rounded-2xl p-6 sm:p-8 bg-white text-black shadow-2xl shadow-white/10 hover:bg-neutral-200 transition flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-5">
+          <div class="w-16 h-16 rounded-2xl bg-black flex items-center justify-center flex-shrink-0">
+            <svg class="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            </svg>
+          </div>
+          <div>
+            <div class="text-3xl sm:text-4xl font-extrabold text-black tracking-tight">Action Required!</div>
+            <p class="text-sm sm:text-base text-neutral-700 mt-1">Some records contain wrong or incomplete data. Review and fix them before you download.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-6 flex-shrink-0">
+          <div class="text-right">
+            <div id="legend-red-pct" class="text-4xl font-mono font-extrabold text-black">0%</div>
+            <div id="legend-red-count" class="text-sm text-neutral-600 font-mono">0 records</div>
+          </div>
+          <span class="px-5 py-3 rounded-xl bg-black group-hover:bg-neutral-800 text-white font-bold text-sm shadow-lg whitespace-nowrap transition">Review Records &rarr;</span>
+        </div>
+      </div>
+
+      <!-- Interactive 2D Doughnut Chart Section (Section 3.4) -->
+      <section class="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800 shadow-2xl relative">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+          
+          <!-- Interactive 2D Doughnut Chart -->
+          <div class="w-full lg:w-3/5 flex flex-col items-center justify-center relative">
+            <div id="chart-canvas-container">
+              <!-- Three.js Canvas injected here -->
+            </div>
+            <!-- Floating glass stat card (shows Correct Data % by default, updates on hover) -->
+            <div id="chart-center-overlay" class="chart-center-overlay opacity-0"></div>
+
+            <div class="text-xs text-slate-500 text-center mt-2 flex items-center justify-center gap-1.5">
+              <svg class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+              </svg>
+              <span>Hover a slice for a subtle lift and percentage | Click to inspect</span>
+            </div>
+          </div>
+
+          <!-- Chart Legend & Actions -->
+          <div class="w-full lg:w-2/5 space-y-6">
+            <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+              <span>Data Quality Distribution</span>
+            </h3>
+
+            <!-- GREEN Legend Card -->
+            <div class="p-4 rounded-xl bg-transparent border border-slate-600 flex items-center justify-between hover:border-white transition group cursor-pointer"
+                 id="btn-inspect-green">
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-slate-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <div>
+                  <div class="text-sm font-bold text-slate-100 flex items-center gap-1.5">
+                    Correct Data (requires no changes)
+                  </div>
+                  <div class="text-xs text-slate-400 mt-0.5">Verified clean records ready to use</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div id="legend-green-pct" class="text-xl font-mono font-extrabold text-white">0%</div>
+                <div id="legend-green-count" class="text-xs text-slate-400 font-mono">0 records</div>
+              </div>
+            </div>
+
+            <!-- Primary Action: Download Fixed Data (Section 3.5) -->
+            <div class="pt-2">
+              <button id="btn-download-fixed" class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-base shadow-xl shadow-emerald-600/30 transition-all transform hover:-translate-y-0.5 flex flex-col items-center justify-center">
+                <div class="flex items-center gap-2">
+                  <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  <span>DOWNLOAD FIXED DATA</span>
+                </div>
+                <span id="fixed-btn-subtext" class="text-xs text-emerald-100 font-normal mt-0.5">
+                  Validated records only • Original columns preserved
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dataset Information Card (Section 3.6) -->
+      <section class="glass-card rounded-2xl p-6 border border-slate-800">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+          <svg class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Dataset Information
+        </h3>
+        <div id="dataset-info">
+          <!-- Filled by JS -->
+        </div>
+      </section>
+
+      <!-- Bottom Grid: Recent Activity & AI Diagnosis -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Recent Activity (Section 3.7) -->
+        <section class="glass-card rounded-2xl p-6 border border-slate-800 flex flex-col">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+            <svg class="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Recent Activity
+          </h3>
+          <ul id="activity-list" class="space-y-1 flex-1 overflow-y-auto max-h-64 pr-2">
+            <!-- Populated by JS -->
+          </ul>
+        </section>
+
+        <!-- AI Quality Diagnosis Card -->
+        <section class="glass-card rounded-2xl p-6 border border-slate-800 flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+              Autonomous Engine Diagnosis
+            </h3>
+            <span class="text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+              Product Principles Enforced
+            </span>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex-1 flex flex-col justify-center">
+            <p id="ai-diagnosis-text" class="text-sm text-slate-300 leading-relaxed italic">
+              Analyzing dataset...
+            </p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- GREEN Read-Only Inspection Page (Page 2 - Section 4.1) -->
+  <main id="view-green" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+      <div>
+        <div class="flex items-center gap-2">
+          <button data-nav="home" class="text-slate-400 hover:text-white transition flex items-center gap-1 text-sm">
+            ← Back to Dashboard
+          </button>
+        </div>
+        <h2 class="text-2xl font-extrabold text-emerald-400 tracking-tight mt-1 flex items-center gap-2">
+          <span>Correct Data (requires no changes)</span>
+          <span id="green-count-badge" class="text-xs px-2.5 py-0.5 rounded-full font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+            0 Records
+          </span>
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">
+          These records are clean, fully verified, and ready for use. No changes are needed.
+        </p>
+      </div>
+
+      <button id="btn-download-green" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/20 transition flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        Download Correct Data
+      </button>
+    </div>
+
+    <!-- Green Table Card -->
+    <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
+      <div class="overflow-x-auto max-h-[600px]">
+        <table class="w-full text-left border-collapse">
+          <thead id="green-table-head" class="bg-slate-900/80 sticky top-0 border-b border-slate-800 z-10"></thead>
+          <tbody id="green-table-body" class="divide-y divide-slate-800/40"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- RED Read-Only Inspection Page (Page 2 - Section 4.2 & 4.3) -->
+  <main id="view-red" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+      <div>
+        <div class="flex items-center gap-2">
+          <button data-nav="home" class="text-slate-400 hover:text-white transition flex items-center gap-1 text-sm">
+            ← Back to Dashboard
+          </button>
+        </div>
+        <h2 class="text-2xl font-extrabold text-rose-400 tracking-tight mt-1 flex items-center gap-2">
+          <span>Action Required!</span>
+          <span id="red-count-badge" class="text-xs px-2.5 py-0.5 rounded-full font-mono font-bold bg-white text-black">
+            0 Records
+          </span>
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">
+          Review detected issues requiring human attention. Use the correction template to make fixes and re-upload.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Download Red Dataset Options -->
+        <button id="btn-download-red-template" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/20 transition flex items-center gap-1.5"
+                title="Includes DataFix_Serial column so you can edit in Excel and upload back!">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Download Correction Template
+        </button>
+
+        <button id="btn-download-red-clean" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-semibold transition"
+                title="Original user columns only">
+          Download Action Required! Records (Clean)
+        </button>
+
+        <!-- ADD FIXED DATASET (Section 5) -->
+        <button id="btn-open-add-fix" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-purple-600/20 transition flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          ADD FIXED DATASET
+        </button>
+      </div>
+    </div>
+
+    <!-- Section 1: Total Errors Overview Section -->
+    <section id="red-total-errors-card" class="glass-card rounded-2xl p-6 border border-slate-800 shadow-xl">
+      <div id="red-total-errors-content">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Section 2: Errors by Reason Breakdown Section -->
+    <section id="red-error-reasons-card" class="glass-card rounded-2xl p-6 border border-slate-800 shadow-xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+        <div>
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
+            <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            Errors by Reason
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Categorized breakdown of errors detected across your dataset. Click any card to filter the error list below.</p>
+        </div>
+      </div>
+      <div id="red-reasons-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Section 3: Dropdown for Errors Section -->
+    <section class="glass-card rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
+      <div class="flex flex-wrap items-center justify-between px-5 py-3.5 border-b border-slate-800 bg-slate-900/80 text-xs text-slate-400 gap-3">
+        <div class="flex items-center gap-2">
+          <span class="font-bold uppercase tracking-widest text-slate-200">Error Explorer</span>
+          <span id="red-filter-status" class="text-xs text-slate-400 font-normal"></span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <label for="red-reason-filter" class="text-xs text-slate-300 font-medium">Filter Reason:</label>
+            <select id="red-reason-filter" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-1.5 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none cursor-pointer">
+              <option value="all">All Errors</option>
+            </select>
+          </div>
+          <div class="h-4 w-px bg-slate-700"></div>
+          <button id="btn-expand-red" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">Expand all</button>
+          <button id="btn-collapse-red" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">Collapse all</button>
+        </div>
+      </div>
+      <div id="red-tree" class="p-4 max-h-[640px] overflow-y-auto space-y-3"></div>
+    </section>
+  </main>
+
+  <!-- Modal: ADD FIXED DATASET (Section 5) -->
+  <div id="add-fix-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="glass-card rounded-2xl max-w-lg w-full p-6 border border-slate-700 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-purple-500"></span>
+          Add Fixed Dataset — Human Reconciliation
+        </h3>
+        <button id="btn-close-add-fix" class="text-slate-400 hover:text-white text-lg">✕</button>
+      </div>
+
+      <div class="text-xs text-slate-300 space-y-2 bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
+        <div class="font-bold text-slate-200">Reconciliation Workflow (Section 5):</div>
+        <ol class="list-decimal list-inside space-y-1 text-slate-400">
+          <li>Download the <strong>Correction Template</strong> above.</li>
+          <li>Edit values in your spreadsheet editor (Excel, Calc, Sheets).</li>
+          <li>Upload here. Backend reconciles using stable <strong>DataFix Serial Numbers</strong>.</li>
+          <li>Valid fixes pass validation and move records from <strong class="text-rose-400">Action Required!</strong> to <strong class="text-emerald-400">Correct Data</strong>!</li>
+        </ol>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-xs font-semibold text-slate-300">Select Corrected Spreadsheet (.csv, .xlsx)</label>
+        <input type="file" id="add-fix-file-input" accept=".csv, .xlsx" class="block w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer bg-slate-900 border border-slate-800 rounded-lg p-2">
+      </div>
+
+      <div id="add-fix-status" class="hidden"></div>
+
+      <div class="flex justify-end gap-3 pt-2">
+        <button onclick="document.getElementById('add-fix-modal').classList.add('hidden')" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300">
+          Cancel
+        </button>
+        <button id="btn-submit-add-fix" class="px-5 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-lg shadow-purple-600/30 transition">
+          Reconcile & Validate
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Repair History & Audit Trail (Section 6 & 8 Stage 12) -->
+  <div id="audit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="glass-card rounded-2xl max-w-3xl w-full p-6 border border-slate-700 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <svg class="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Traceable Audit Trail & Rollback
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Every modification by AI or Human is recorded with timestamp and rollback capability.</p>
+        </div>
+        <button id="btn-close-audit" class="text-slate-400 hover:text-white text-lg">✕</button>
+      </div>
+
+      <div id="audit-list" class="space-y-2 flex-1 overflow-y-auto pr-2">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 bg-black py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4">
+      <p>RECODA — Autonomous Data Quality & Repair Engine • INNOVEDGE Innovation & Entrepreneurship Development Club</p>
+      <p class="mt-1 text-[11px] text-slate-600">Product principle: AI repairs what it can reliably determine, and routes uncertain corrections to a human.</p>
+    </div>
+  </footer>
+
+  <!-- App Scripts -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/chart3d.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

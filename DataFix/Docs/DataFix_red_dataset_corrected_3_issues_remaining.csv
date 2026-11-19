@@ -1,0 +1,75 @@
+DataFix_Serial,employee_id,employee_name,department,city,joining_date,salary_inr,email,employment_status
+DFX-000020,EMP0020,Rohan Chowdhury,Operations,,2018-01-03,32000,rohan.chowdhury20@example.com,Inactive
+DFX-000066,EMP0066,Karan Verma,Customer Support,Hyderabad,2023-07-18,65000,karan.verma66@company.test,Active
+DFX-000069,EMP0069,Kavya Kulkarni,Data Science,Kochi,2021-07-23,,kavya.kulkarni69@sample.org,On Leave
+DFX-000079,EMP0079,Sai Patel,Customer Support,Pune,2020-12-01,138941,sai.patel79@sample.org,Active
+DFX-000086,EMP0086,Vikram Singh,Marketing,Kochi,2019-02-22,58000,vikram.singh86@company.test,Active
+DFX-000093,EMP0093,Sneha Das,Marketing,Kochi,2021-10-26,98000,sneha.das93@company.test,Active
+DFX-000098,EMP0098,Vihaan Gupta,Sales,Ahmedabad,2021-07-16,165142,vihaan.gupta98@example.com,Active
+DFX-000115,EMP0115,Sai Menon,Data Science,Chennai,2023-10-27,74000,sai.menon115@company.test,Active
+DFX-000144,EMP0144,Rohan Patel,Data Science,Chennai,2024-10-19,86000,rohan.patel144@company.test,Active
+DFX-000185,EMP0185,Neha Mishra,Human Resources,Pune,2019-12-21,164000,neha.mishra185@company.test,Active
+DFX-000192,EMP0192,Diya Joshi,Human Resources,Chennai,2026-02-27,54000,diya.joshi192@example.com,Active
+DFX-000208,EMP0208,Sai Nair,,Jaipur,2025-10-08,39000,sai.nair208@sample.org,Active
+DFX-000215,EMP0215,Aadhya Chowdhury,Finance,Kolkata,2022-03-12,46485,aadhya.chowdhury215@sample.org,Active
+DFX-000223,EMP0223,Aditya Chowdhury,Engineering,Kolkata,2024-02-07,113153,aditya.chowdhury223@example.com,Active
+DFX-000242,EMP0242,Karan Pillai,Operations,Pune,2018-12-26,44000,karan.pillai242@company.test,Active
+DFX-000262,EMP0262,Ayaan Gupta,Customer Support,Bengaluru,2024-07-17,40000,ayaan.gupta262@sample.org,Active
+DFX-000280,EMP0280,Karan Menon,Data Science,Pune,2021-07-22,136120,karan.menon280@company.test,Active
+DFX-000306,EMP0306,Ira Patel,Customer Support,Delhi,2021-03-21,62000,ira.patel306@company.test,Inactive
+DFX-000308,EMP0308,Priya Kapoor,Operations,Mumbai,2019-06-29,34732,priya.kapoor308@company.test,Active
+DFX-000310,EMP0310,Saanvi Kapoor,Finance,Hyderabad,2022-04-03,37490,saanvi.kapoor310@sample.org,Active
+DFX-000321,EMP0321,Neha Gupta,Marketing,Kolkata,2018-07-31,52659,neha.gupta321@example.com,Active
+DFX-000322,EMP0322,Rohan Saxena,Finance,Jaipur,2026-02-14,81000,rohan.saxena322@sample.org,Active
+DFX-000345,EMP0345,Aadhya Kapoor,Customer Support,Delhi,2021-09-20,85755,aadhya.kapoor345@company.test,Active
+DFX-000356,EMP0356,Saanvi Das,Marketing,Jaipur,2022-09-21,100924,saanvi.das356@sample.org,Active
+DFX-000373,EMP0373,Rahul Kumar,Human Resources,Hyderabad,2025-08-05,160000,rahul.kumar373@example.com,Active
+DFX-000407,EMP0407,Vihaan Mishra,Human Resources,Jaipur,2025-10-13,46000,vihaan.mishra407@example.com,Active
+DFX-000417,EMP0417,Ira Reddy,Sales,Bengaluru,2018-03-10,95000,ira.reddy417@example.com,Active
+DFX-000422,EMP0422,Saanvi Kumar,Customer Support,Chennai,2023-02-01,72000,saanvi.kumar422@example.com,Active
+DFX-000435,EMP0435,Nisha Mishra,Data Science,Ahmedabad,2018-04-08,116000,nisha.mishra435@company.test,On Leave
+DFX-000438,EMP0438,Ayaan Chowdhury,Operations,Jaipur,2022-08-19,74002,ayaan.chowdhury438@company.test,Active
+DFX-000444,EMP0444,Ananya Iyer,Finance,Pune,2019-01-09,82276,ananya.iyer444@company.test,Active
+DFX-000477,EMP0477,Meera Menon,Sales,Kolkata,2025-11-25,70000,meera.menon477@company.test,On Leave
+DFX-000487,EMP0487,Priya Menon,Finance,Jaipur,2024-06-03,141573,priya.menon487@example.com,Active
+DFX-000513,EMP0513,Ayaan Patel,Customer Support,Pune,2024-09-23,63000,ayaan.patel513@company.test,Active
+DFX-000517,EMP0517,Ira Iyer,Marketing,Ahmedabad,2026-04-23,42943,ira.iyer517@company.test,On Leave
+DFX-000526,EMP0526,Reyansh Joshi,Operations,Ahmedabad,2018-02-27,139186,reyansh.joshi526@example.com,Active
+DFX-000529,EMP0529,Anika Kulkarni,Operations,Hyderabad,2023-11-17,62000,anika.kulkarni529@sample.org,Inactive
+DFX-000542,EMP0542,Vihaan Patel,Customer Support,Delhi,2018-02-09,112000,vihaan.patel542@sample.org,On Leave
+DFX-000544,EMP0544,Aadhya Pillai,Customer Support,Jaipur,2021-01-18,80176,aadhya.pillai544@company.test,On Leave
+DFX-000553,EMP0553,Aditya Pillai,Data Science,Mumbai,2022-12-25,92587,aditya.pillai553@sample.org,Active
+DFX-000577,EMP0577,Rohan Gupta,Operations,Delhi,2021-04-19,47000,rohan.gupta577@example.com,Inactive
+DFX-000581,EMP0581,Priya Rao,Operations,Mumbai,2023-07-03,131199,priya.rao581@company.test,Active
+DFX-000585,EMP0585,Myra Singh,Finance,Bengaluru,2025-03-15,110000,myra.singh585@sample.org,On Leave
+DFX-000607,EMP0607,Sai Kulkarni,Marketing,Delhi,2018-12-02,167053,sai.kulkarni607@example.com,Active
+DFX-000609,EMP0609,Riya Saxena,Finance,Bengaluru,2022-07-18,89799,riya.saxena609@sample.org,Active
+DFX-000617,EMP0617,Aadhya Verma,Sales,Ahmedabad,2022-02-05,92000,aadhya.verma617@sample.org,Inactive
+DFX-000643,EMP0643,Meera Mishra,Sales,Mumbai,2018-12-28,84000,meera.mishra643@sample.org,Active
+DFX-000658,EMP0658,Pooja Das,Human Resources,Hyderabad,2020-04-26,91000,pooja.das658@company.test,Active
+DFX-000668,EMP0668,Sneha Singh,Customer Support,Kolkata,2024-03-24,111172,sneha.singh668@example.com,Active
+DFX-000674,EMP0674,Meera Gupta,Human Resources,Chennai,2024-06-20,118000,meera.gupta674@sample.org,Active
+DFX-000680,EMP0680,Priya Das,Sales,Hyderabad,2026-05-05,127720,priya.das680@sample.org,Active
+DFX-000688,EMP0688,Rohan Iyer,Marketing,Jaipur,2021-11-09,164000,rohan.iyer688@example.com,Active
+DFX-000697,EMP0697,Saanvi Rao,Operations,Jaipur,2023-08-04,44967,saanvi.rao697@sample.org,Active
+DFX-000708,EMP0708,Rohan Joshi,Marketing,Bengaluru,2022-12-02,124000,rohan.joshi708@sample.org,Active
+DFX-000721,EMP0721,Aditya Rao,Finance,Jaipur,2018-11-16,52000,aditya.rao721@example.com,Active
+DFX-000742,EMP0742,Ananya Saxena,Sales,Kolkata,2019-01-02,136000,ananya.saxena742@sample.org,Active
+DFX-000753,EMP0753,Anika Pillai,Engineering,Bengaluru,2024-04-15,91000,anika.pillai753@company.test,Active
+DFX-000781,EMP0781,Amit Iyer,Engineering,Kochi,2020-04-10,121491,amit.iyer781@example.com,Active
+DFX-000802,EMP0802,Nisha Joshi,Human Resources,Chennai,2018-09-29,35000,nisha.joshi802@sample.org,Inactive
+DFX-000815,EMP0815,Meera Mehta,Data Science,Bengaluru,2024-01-24,33885,meera.mehta815@example.com,Active
+DFX-000821,EMP0821,Priya Mehta,Data Science,Jaipur,2021-08-23,42159,priya.mehta821@example.com,Active
+DFX-000824,EMP0824,Ishaan Kapoor,Customer Support,Kochi,2023-03-04,46296,ishaan.kapoor824@example.com,Active
+DFX-000844,EMP0844,Aditya Chowdhury,Sales,Hyderabad,2024-11-03,73876,aditya.chowdhury844@company.test,Active
+DFX-000860,EMP0860,Priya Nair,Engineering,Bengaluru,2021-07-07,45000,priya.nair860@example.com,Active
+DFX-000863,EMP0863,Reyansh Kulkarni,Sales,Mumbai,2025-02-26,50000,reyansh.kulkarni863@company.test,Active
+DFX-000868,EMP0868,Nisha Gupta,Customer Support,Delhi,2024-11-04,75748,nisha.gupta868@example.com,Active
+DFX-000884,EMP0884,Vikram Kumar,Data Science,Ahmedabad,2019-04-13,84000,vikram.kumar884@example.com,Active
+DFX-000888,EMP0888,Ayaan Saxena,Human Resources,Mumbai,2018-06-16,124000,ayaan.saxena888@example.com,Active
+DFX-000903,EMP0903,Vivaan Saxena,Marketing,Mumbai,2018-09-02,56000,vivaan.saxena903@sample.org,Active
+DFX-000907,EMP0907,Pooja Singh,Operations,Kolkata,2020-10-12,176000,pooja.singh907@example.com,On Leave
+DFX-000919,EMP0919,Ananya Joshi,Customer Support,Chennai,2020-12-31,41000,ananya.joshi919@example.com,Active
+DFX-000923,EMP0923,Arjun Menon,Finance,Ahmedabad,2019-09-09,33000,arjun.menon923@sample.org,Active
+DFX-000966,EMP0966,Nisha Kulkarni,Finance,Delhi,2020-04-21,117000,nisha.kulkarni966@example.com,Active
+DFX-000979,EMP0979,Aadhya Kumar,Customer Support,Jaipur,2020-08-11,99000,aadhya.kumar979@company.test,Active

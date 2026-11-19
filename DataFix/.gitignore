@@ -1,0 +1,74 @@
+# ==============================================================================
+# RECODA - Secret Credentials & API Keys (CRITICAL: NEVER COMMIT)
+# ==============================================================================
+api_key.txt
+*.key
+*.pem
+.env
+.env.*
+!.env.example
+!api_key.example.txt
+
+# ==============================================================================
+# Database & Runtime Data
+# ==============================================================================
+backend/database/*.db
+backend/database/*.sqlite
+backend/database/*.sqlite3
+database/*.db
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploaded datasets & Exported files (contains private user/test data)
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/exports/*
+!backend/exports/.gitkeep
+uploads/*
+!uploads/.gitkeep
+exports/*
+!exports/.gitkeep
+
+# Archives & Temporary files
+*.zip
+*.tar.gz
+*.rar
+
+# ==============================================================================
+# Python & Bytecode Caches
+# ==============================================================================
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# ==============================================================================
+# IDE & Operating System Files
+# ==============================================================================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+ehthumbs.db
