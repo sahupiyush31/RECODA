@@ -72,9 +72,6 @@ const API = {
     if (!res.ok) throw new Error("Failed to load RED records");
     return await res.json();
   },
-    if (!res.ok) throw new Error("Failed to load RED records");
-    return await res.json();
-  },
 
   getExportFixedUrl(datasetId) {
     return `${API_BASE}/datasets/${datasetId}/export/fixed`;
