@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupUpload();
   setupAddFix();
   setupAudit();
+  checkBackendHealth();
 });
 
 // Health check
