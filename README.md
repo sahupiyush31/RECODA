@@ -267,16 +267,3 @@ python -m unittest discover tests -v
 - **Sanitized Exports:** Internal tracking identifiers (`_datafix_id`, `_issues`, `_human_required`) are stripped before user downloads.
 
 ---
-
-## 👥 Hackathon & Development Credits
-
-- **Project:** RECODA (Autonomous Data Quality & Repair Engine)
-- **Author:** [Piyush Sahu](https://github.com/sahupiyush31)
-- **Club / Initiative:** INNOVEDGE Innovation & Entrepreneurship Development Club
-- **License:** MIT License
-
----
-
-<div align="center">
-  <sub>Built with ❤️ for bulletproof data pipelines and reliable enterprise AI.</sub>
-</div>
